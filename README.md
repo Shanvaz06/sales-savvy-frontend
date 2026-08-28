@@ -33,6 +33,6 @@ Frontend built using React.js.
 ![Orders](src/pages/screenshots/orders.png.png)
 
 ### Dashboard
+![Dashboard](src/pages/screenshots/admin.png.png)
 ![Dashboard](src/pages/screenshots/adminDashboard.png.png)
 ![Dashboard](src/pages/screenshots/adminDashboard.png2.png)
-![Dashboard](src/pages/screenshots/admin.png.png)
