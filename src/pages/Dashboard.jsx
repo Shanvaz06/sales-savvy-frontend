@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [stats, setStats] = useState({
@@ -15,8 +15,6 @@ function Dashboard() {
     const fetchStats = async () => {
       const token = localStorage.getItem("token");
 
-      console.log("Dashboard token =", token);
-
       if (!token || token === "undefined") {
         alert("Please login first");
         navigate("/login");
@@ -25,7 +23,7 @@ function Dashboard() {
 
       try {
         const response = await axios.get(
-          "http://localhost:9090/dashboard/stats",
+          "http://localhost:9091/dashboard/stats",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -54,89 +52,170 @@ function Dashboard() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#111827",
+        background: "#0f172a",
         color: "white",
         padding: "40px",
       }}
     >
-      <h1 style={{ marginBottom: "30px" }}>Sales Savvy Dashboard</h1>
-
+      {/* Header */}
       <div
         style={{
-          display: "flex",
-          gap: "20px",
-          marginBottom: "30px",
-          flexWrap: "wrap",
+          textAlign: "center",
+          marginBottom: "50px",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "48px",
+            marginBottom: "10px",
+          }}
+        >
+          Sales Savvy Admin
+        </h1>
+
+        <p
+          style={{
+            color: "#94a3b8",
+            fontSize: "18px",
+          }}
+        >
+          Manage Products, Categories and Users
+        </p>
+      </div>
+
+      {/* Stats Cards */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit,minmax(250px,1fr))",
+          gap: "25px",
+          marginBottom: "50px",
         }}
       >
         <div
           style={{
-            background: "#1f2937",
-            padding: "20px",
-            borderRadius: "10px",
-            minWidth: "180px",
-            textAlign: "center",
+            background:
+              "linear-gradient(135deg,#2563eb,#1d4ed8)",
+            padding: "30px",
+            borderRadius: "20px",
+            boxShadow: "0 10px 25px rgba(37,99,235,0.4)",
           }}
         >
-          <h3>Users</h3>
-          <h2>{stats.users}</h2>
+          <h3
+            style={{
+              marginBottom: "10px",
+              fontSize: "22px",
+            }}
+          >
+            👥 Users
+          </h3>
+
+          <h1>{stats.users}</h1>
         </div>
 
         <div
           style={{
-            background: "#1f2937",
-            padding: "20px",
-            borderRadius: "10px",
-            minWidth: "180px",
-            textAlign: "center",
+            background:
+              "linear-gradient(135deg,#22c55e,#16a34a)",
+            padding: "30px",
+            borderRadius: "20px",
+            boxShadow: "0 10px 25px rgba(34,197,94,0.4)",
           }}
         >
-          <h3>Products</h3>
-          <h2>{stats.products}</h2>
+          <h3
+            style={{
+              marginBottom: "10px",
+              fontSize: "22px",
+            }}
+          >
+            📦 Products
+          </h3>
+
+          <h1>{stats.products}</h1>
         </div>
 
         <div
           style={{
-            background: "#1f2937",
-            padding: "20px",
-            borderRadius: "10px",
-            minWidth: "180px",
-            textAlign: "center",
+            background:
+              "linear-gradient(135deg,#f59e0b,#d97706)",
+            padding: "30px",
+            borderRadius: "20px",
+            boxShadow: "0 10px 25px rgba(245,158,11,0.4)",
           }}
         >
-          <h3>Categories</h3>
-          <h2>{stats.categories}</h2>
+          <h3
+            style={{
+              marginBottom: "10px",
+              fontSize: "22px",
+            }}
+          >
+            🏷 Categories
+          </h3>
+
+          <h1>{stats.categories}</h1>
         </div>
       </div>
 
-      <button
-  onClick={() => navigate('/products')}
-  style={{
-    marginTop: '10px',
-    padding: '8px 12px',
-    background: '#2563eb',
-    color: 'white',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-  }}
->
-  Manage Products
-</button>
-
-      <button
-        onClick={handleLogout}
+      {/* Quick Actions */}
+      <div
         style={{
-          padding: "10px 20px",
-          background: "#dc2626",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
+          background: "#1e293b",
+          padding: "30px",
+          borderRadius: "20px",
+          border: "1px solid #334155",
         }}
       >
-        Logout
-      </button>
+        <h2
+          style={{
+            marginBottom: "25px",
+          }}
+        >
+          Quick Actions
+        </h2>
+
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            onClick={() => navigate("/products")}
+            style={{
+              background:
+                "linear-gradient(135deg,#3b82f6,#2563eb)",
+              color: "white",
+              border: "none",
+              padding: "15px 25px",
+              borderRadius: "12px",
+              cursor: "pointer",
+              fontSize: "16px",
+              fontWeight: "600",
+            }}
+          >
+            📦 Manage Products
+          </button>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              background:
+                "linear-gradient(135deg,#ef4444,#dc2626)",
+              color: "white",
+              border: "none",
+              padding: "15px 25px",
+              borderRadius: "12px",
+              cursor: "pointer",
+              fontSize: "16px",
+              fontWeight: "600",
+            }}
+          >
+            🚪 Logout
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

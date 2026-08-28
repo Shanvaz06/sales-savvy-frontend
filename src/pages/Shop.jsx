@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 function Shop() {
   const [products, setProducts] = useState([]);
@@ -9,7 +10,7 @@ function Shop() {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL: "http://localhost:9090",
+    baseURL: "http://localhost:9091",
   });
 
   const loadProducts = async () => {
@@ -101,85 +102,110 @@ function Shop() {
       </div>
     );
   }
+    return (
+  <>
+    <Navbar />
 
-  return (
     <div
       style={{
         minHeight: "100vh",
-        background: "#111827",
+        background: "#0f172a",
         color: "white",
-        padding: "40px",
+        padding: "40px 20px",
       }}
     >
       <div
         style={{
-          maxWidth: "1100px",
+          maxWidth: "1300px",
           margin: "auto",
         }}
       >
-        <div
+        <h1
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "30px",
+            textAlign: "center",
+            fontSize: "52px",
+            fontWeight: "bold",
+            marginBottom: "40px",
           }}
         >
-          <h1 style={{ margin: 0 }}>Sales Savvy Shop</h1>
-
-          <button
-            onClick={() => navigate("/dashboard")}
-            style={{
-              background: "#374151",
-              color: "white",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-          >
-            Dashboard
-          </button>
-        </div>
+          Sales Savvy Shop
+        </h1>
 
         {products.length === 0 ? (
-          <p>No products available.</p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "20px",
+            }}
+          >
+            No products available.
+          </p>
         ) : (
           <div
             style={{
               display: "grid",
               gridTemplateColumns:
-                "repeat(auto-fit, minmax(250px, 1fr))",
-              gap: "20px",
+                "repeat(auto-fit, minmax(320px, 1fr))",
+              gap: "25px",
             }}
           >
             {products.map((product) => (
               <div
                 key={product.id}
                 style={{
-                  background: "#1f2937",
-                  borderRadius: "10px",
-                  padding: "20px",
-                  boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                  background: "#1e293b",
+                  borderRadius: "18px",
+                  padding: "22px",
+                  border: "1px solid #334155",
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
                 }}
               >
-                <h2 style={{ marginTop: 0 }}>
+                <img
+  src={product.imageUrl}
+  alt={product.productName}
+  style={{
+    width: "100%",
+    height: "220px",
+    objectFit: "cover",
+    borderRadius: "12px",
+    marginBottom: "20px",
+  }}
+/>
+
+                <h2
+                  style={{
+                    fontSize: "24px",
+                    marginBottom: "15px",
+                  }}
+                >
                   {product.productName}
                 </h2>
 
-                <p>
-                  <strong>Price:</strong> ₹{product.price}
+                <p
+                  style={{
+                    fontSize: "26px",
+                    fontWeight: "bold",
+                    color: "#22c55e",
+                  }}
+                >
+                  ₹{product.price}
                 </p>
 
-                <p>
-                  <strong>Available:</strong> {product.quantity}
+                <p
+                  style={{
+                    color: "#cbd5e1",
+                  }}
+                >
+                  Stock: {product.quantity}
                 </p>
 
-                <p>
-                  <strong>Category:</strong>{" "}
-                  {product.category?.categoryName ||
-                    product.category?.id ||
-                    "-"}
+                <p
+                  style={{
+                    color: "#94a3b8",
+                    marginBottom: "20px",
+                  }}
+                >
+                  Category: {product.category?.categoryName || "-"}
                 </p>
 
                 <button
@@ -193,18 +219,18 @@ function Shop() {
                         : "#6b7280",
                     color: "white",
                     border: "none",
-                    padding: "12px",
-                    borderRadius: "6px",
+                    padding: "14px",
+                    borderRadius: "10px",
                     cursor:
                       product.quantity > 0
                         ? "pointer"
                         : "not-allowed",
-                    marginTop: "10px",
+                    fontWeight: "bold",
                   }}
                 >
                   {product.quantity > 0
-                    ? "Add to Cart"
-                    : "Out of Stock"}
+                    ? "Add To Cart"
+                    : "Out Of Stock"}
                 </button>
               </div>
             ))}
@@ -214,7 +240,7 @@ function Shop() {
         <div
           style={{
             textAlign: "center",
-            marginTop: "35px",
+            marginTop: "40px",
           }}
         >
           <button
@@ -223,17 +249,20 @@ function Shop() {
               background: "#16a34a",
               color: "white",
               border: "none",
-              padding: "12px 25px",
-              borderRadius: "6px",
+              padding: "15px 35px",
+              borderRadius: "10px",
               cursor: "pointer",
+              fontSize: "18px",
+              fontWeight: "bold",
             }}
           >
-            Go to Checkout
+            Go To Checkout
           </button>
         </div>
       </div>
     </div>
-  );
+  </>
+);
 }
 
 export default Shop;

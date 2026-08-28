@@ -6,7 +6,6 @@ function Checkout() {
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // Calculate total amount from cart
   const total = cart.reduce((sum, item) => {
     return sum + Number(item.price) * Number(item.cartQuantity);
   }, 0);
@@ -27,9 +26,8 @@ function Checkout() {
         return;
       }
 
-      // Create Razorpay order with actual cart total
       const response = await axios.post(
-        "http://localhost:9090/payment/create-order",
+        "http://localhost:9091/payment/create-order",
         {
           amount: total,
         },
@@ -42,9 +40,6 @@ function Checkout() {
       );
 
       const payment = response.data;
-
-      console.log("PAYMENT RESPONSE =", payment);
-      console.log("TOTAL AMOUNT =", total);
 
       const options = {
         key: "rzp_test_TOoWRSL7X7maK7",
@@ -60,63 +55,50 @@ function Checkout() {
         order_id: payment.razorpayOrderId,
 
         handler: async function () {
+          try {
+            await axios.put(
+              `http://localhost:9091/payment/success/${payment.id}`,
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
-  try {
+            const orderItems = cart.map((item) => ({
+              productId: item.id,
+              quantity: item.cartQuantity,
+            }));
 
-    // 1. Mark payment successful
-    await axios.put(
-      `http://localhost:9090/payment/success/${payment.id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+            await axios.post(
+              "http://localhost:9091/orders/place",
+              orderItems,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            localStorage.removeItem("cart");
+
+            alert("Payment Successful. Order Placed!");
+
+            navigate("/shop");
+          } catch (error) {
+            console.error(
+              "Order creation failed:",
+              error.response?.status,
+              error.response?.data || error
+            );
+
+            alert(
+              "Payment completed, but order creation failed"
+            );
+          }
         },
-      }
-    );
-
-    // 2. Prepare order items
-    const orderItems = cart.map((item) => ({
-      productId: item.id,
-      quantity: item.cartQuantity,
-    }));
-
-    console.log("ORDER ITEMS =", orderItems);
-
-    // 3. Create order
-    const orderResponse = await axios.post(
-      "http://localhost:9090/orders/place",
-      orderItems,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    console.log("ORDER CREATED =", orderResponse.data);
-
-    // 4. Clear cart
-    localStorage.removeItem("cart");
-
-    alert("Payment Successful. Order Placed!");
-
-    // 5. Go back to shop
-    navigate("/shop");
-
-  } catch (error) {
-
-    console.error(
-      "Order creation failed:",
-      error.response?.status,
-      error.response?.data || error
-    );
-
-    alert(
-      "Payment completed, but order creation failed"
-    );
-  }
-},
 
         prefill: {
           name: "Shaik",
@@ -125,14 +107,13 @@ function Checkout() {
         },
 
         theme: {
-          color: "#3399cc",
+          color: "#22c55e",
         },
       };
 
       const rzp = new window.Razorpay(options);
 
       rzp.open();
-
     } catch (error) {
       console.error(
         "Payment creation failed:",
@@ -144,13 +125,12 @@ function Checkout() {
     }
   };
 
-  // Empty cart
   if (cart.length === 0) {
     return (
       <div
         style={{
           minHeight: "100vh",
-          background: "#111827",
+          background: "#0f172a",
           color: "white",
           display: "flex",
           flexDirection: "column",
@@ -158,7 +138,9 @@ function Checkout() {
           alignItems: "center",
         }}
       >
-        <h2>Your cart is empty</h2>
+        <h2 style={{ marginBottom: "20px" }}>
+          Your Cart Is Empty
+        </h2>
 
         <button
           onClick={() => navigate("/shop")}
@@ -166,12 +148,13 @@ function Checkout() {
             background: "#2563eb",
             color: "white",
             border: "none",
-            padding: "12px 25px",
-            borderRadius: "6px",
+            padding: "14px 28px",
+            borderRadius: "10px",
             cursor: "pointer",
+            fontWeight: "600",
           }}
         >
-          Go to Shop
+          Go To Shop
         </button>
       </div>
     );
@@ -181,75 +164,104 @@ function Checkout() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#111827",
+        background: "#0f172a",
         color: "white",
-        padding: "40px",
+        padding: "40px 20px",
       }}
     >
       <div
         style={{
-          maxWidth: "700px",
+          maxWidth: "800px",
           margin: "auto",
         }}
       >
-        <h1>Checkout</h1>
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "42px",
+            fontWeight: "700",
+            marginBottom: "35px",
+          }}
+        >
+          Secure Checkout
+        </h1>
 
-        {/* Cart Items */}
         {cart.map((item) => (
           <div
             key={item.id}
             style={{
-              background: "#1f2937",
-              padding: "20px",
-              marginBottom: "15px",
-              borderRadius: "8px",
+              background: "#1e293b",
+              padding: "25px",
+              marginBottom: "20px",
+              borderRadius: "16px",
+              border: "1px solid #334155",
+              boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
             }}
           >
-            <h2>{item.productName}</h2>
+            <h2
+              style={{
+                color: "#f8fafc",
+                marginBottom: "15px",
+              }}
+            >
+              {item.productName}
+            </h2>
 
-            <p>
-              Price: ₹{Number(item.price).toLocaleString("en-IN")}
+            <p style={{ color: "#cbd5e1" }}>
+              Price: ₹
+              {Number(item.price).toLocaleString("en-IN")}
             </p>
 
-            <p>
+            <p style={{ color: "#cbd5e1" }}>
               Quantity: {item.cartQuantity}
             </p>
 
-            <p>
+            <p
+              style={{
+                color: "#22c55e",
+                fontWeight: "bold",
+                marginTop: "10px",
+              }}
+            >
               Subtotal: ₹
               {(
-                Number(item.price) * Number(item.cartQuantity)
+                Number(item.price) *
+                Number(item.cartQuantity)
               ).toLocaleString("en-IN")}
             </p>
           </div>
         ))}
 
-        {/* Total */}
         <div
           style={{
-            background: "#374151",
-            padding: "20px",
-            borderRadius: "8px",
+            background: "#16a34a",
+            padding: "25px",
+            borderRadius: "16px",
             marginTop: "25px",
+            textAlign: "center",
+            boxShadow:
+              "0 8px 20px rgba(22,163,74,0.4)",
           }}
         >
           <h2>
-            Total: ₹{total.toLocaleString("en-IN")}
+            Total Amount : ₹
+            {total.toLocaleString("en-IN")}
           </h2>
         </div>
 
-        {/* Payment Button */}
         <button
           onClick={handlePayment}
           style={{
             width: "100%",
-            background: "#16a34a",
+            background:
+              "linear-gradient(135deg,#22c55e,#16a34a)",
             color: "white",
             border: "none",
-            padding: "15px",
-            borderRadius: "6px",
+            padding: "16px",
+            borderRadius: "12px",
             cursor: "pointer",
             fontSize: "18px",
+            fontWeight: "700",
             marginTop: "20px",
           }}
         >
@@ -260,16 +272,16 @@ function Checkout() {
           onClick={() => navigate("/shop")}
           style={{
             width: "100%",
-            background: "#374151",
+            background: "#334155",
             color: "white",
             border: "none",
-            padding: "12px",
-            borderRadius: "6px",
+            padding: "14px",
+            borderRadius: "12px",
             cursor: "pointer",
-            marginTop: "10px",
+            marginTop: "12px",
           }}
         >
-          Back to Shop
+          Back To Shop
         </button>
       </div>
     </div>

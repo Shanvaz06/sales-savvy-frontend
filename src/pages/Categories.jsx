@@ -9,7 +9,7 @@ function Categories() {
   const token = localStorage.getItem('token');
 
   const loadCategories = () => {
-    axios.get('http://localhost:9090/categories/all', {
+    axios.get('http://localhost:9091/categories/all', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -27,7 +27,7 @@ function Categories() {
     const token = localStorage.getItem('token');
 
     const response = await axios.post(
-      'http://localhost:9090/categories/save',
+      'http://localhost:9091/categories/save',
       {
         categoryName: categoryName
       },
@@ -54,7 +54,7 @@ function Categories() {
 
   const updateCategory = async () => {
     await axios.put(
-      `http://localhost:9090/categories/update/${editingId}`,
+      `http://localhost:9091/categories/update/${editingId}`,
       { categoryName },
       {
         headers: { Authorization: `Bearer ${token}` }
@@ -68,7 +68,7 @@ function Categories() {
 
   const deleteCategory = async (id) => {
     await axios.delete(
-      `http://localhost:9090/categories/delete/${id}`,
+      `http://localhost:9091/categories/delete/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` }
       }
