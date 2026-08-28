@@ -20,19 +20,19 @@ Frontend built using React.js.
 ## Screenshots
 
 ### Login Page
-![Login](src/pages/screenshots/login.png)
+![Login](src/pages/screenshots/login.png.png)
 
 ### Shop Page
-![Shop](src/pages/screenshots/shop.png)
-![Shop](src/pages/screenshots/shop.png2)
+![Shop](src/pages/screenshots/shop.png.png)
+![Shop](src/pages/screenshots/shop.png2.png)
 
 ### Cart Page
-![Cart](src/pages/screenshots/cart.png)
+![Cart](src/pages/screenshots/cart.png.png)
 
 ### Orders Page
-![Orders](src/pages/screenshots/orders.png)
+![Orders](src/pages/screenshots/orders.png.png)
 
 ### Dashboard
-![Dashboard](src/pages/screenshots/adminDashboard.png)
-![Dashboard](src/pages/screenshots/adminDashboard.png2)
-![Dashboard](src/pages/screenshots/admin.png)
+![Dashboard](src/pages/screenshots/adminDashboard.png.png)
+![Dashboard](src/pages/screenshots/adminDashboard.png2.png)
+![Dashboard](src/pages/screenshots/admin.png.png)
